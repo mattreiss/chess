@@ -4,7 +4,7 @@ import FullButton from './Buttons/FullButton';
 
 // Chess
 import Board from './Chess/Board';
-import Pond from './Chess/Pond';
+import Piece from './Chess/Piece';
 
 export {
   // Buttons
@@ -13,5 +13,5 @@ export {
 
   //Chess
   Board,
-  Pond
+  Piece
 };

@@ -1,16 +1,7 @@
-
+import { PIECES } from '../Constants';
 
 const cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-const rows = ['1', '2', '3', '4', '5', '6', '7', '8']
-const PIECES = {
-  pawn: 'p',
-  rook: 'r',
-  horse: 'h',
-  bishop: 'b',
-  queen: 'q',
-  king: 'k',
-  none: '-'
-}
+const rows = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
 const pieceObject = (piece, isBlack) => {
   return {piece, isBlack};
@@ -51,7 +42,8 @@ const getValue = (row, col) => {
 
 export default class ChessModel {
   constructor(obj = {}) {
-    this.map = {};
+    this.map = obj;
+    if (obj.a1) return;
     console.log("constructing new chess model map", rows, cols);
     rows.forEach(row => {
       cols.forEach(col => {
@@ -80,6 +72,11 @@ export default class ChessModel {
   setPieceAt(i, j, piece) {
     let key = this.getKeyAt(i, j);
     this.map[key] = piece;
+  }
+
+  copy() {
+    let mapCopy = Object.assign({}, this.map);
+    return mapCopy;
   }
 
   isMoveValid(fromI, fromJ, toI, toJ) {
