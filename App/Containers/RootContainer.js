@@ -5,8 +5,6 @@ import { connect } from 'react-redux'
 import StartupActions from '../Redux/StartupRedux'
 import ReduxPersist from '../Config/ReduxPersist'
 
-// Styles
-import styles from './Styles/RootContainerStyles'
 
 class RootContainer extends Component {
   componentDidMount () {
@@ -18,8 +16,8 @@ class RootContainer extends Component {
 
   render () {
     return (
-      <View style={styles.applicationView}>
-        <StatusBar barStyle='light-content' />
+      <View style={{flex:1}}>
+        <StatusBar barStyle='dark-content' />
         <ReduxNavigation />
       </View>
     )
