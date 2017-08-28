@@ -59,7 +59,7 @@ class Board extends Component {
         let isSelected = selected && selected.i == i && selected.j == j;
         let isLastMove = lastMove && ((lastMove.fromI == i && lastMove.fromJ == j) || (lastMove.toI == i && lastMove.toJ == j));
         var color = isCheckered ? {backgroundColor: Colors.steel} : {};
-        if (isLastMove) color = {backgroundColor: Colors.facebook}
+        if (isLastMove) color = {backgroundColor: "rgba(50,100,255,0.5)"}
         if (isSelected) color = {backgroundColor: Colors.bloodOrange};
         cells.push(
           <TouchableOpacity key={i+""+j} style={[styles.cell, color]} onPress={() => this.onPressCell(row, col)}>

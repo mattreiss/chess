@@ -79,22 +79,89 @@ export default class ChessModel {
     return mapCopy;
   }
 
-  isMoveValid(fromI, fromJ, toI, toJ) {
-    let fromKey = this.getKeyAt(fromI, fromJ);
-    let fromPiece = this.map[fromKey];
+  hasIndex(i, j) {
+    return !(i < 0 || i >= rows.length || j < 0 || j >= rows.length);
+  }
 
-    let toKey = this.getKeyAt(toI, toJ);
-    let toPiece = this.map[toKey];
+  isEmptyAt(i,j) {
+    if (!this.hasIndex(i,j)) return false;
+    let { piece } = this.getPieceAt(i, j);
+    return piece == PIECES.none;
+  }
 
-    if (fromPiece.piece == PIECES.none) return false;
-    if (toPiece.piece != PIECES.none) {
-      if (toPiece.isBlack == fromPiece.isBlack) return false;
+  getPawnMoves(i,j,isBlack) {
+    let moves = [];
+    let newI = isBlack ? i + 1 : i - 1;
+    let newI2 = isBlack ? i + 2 : i - 2;
+    this.isEmptyAt(newI, j) && moves.push({i: newI, j});
+    this.isEmptyAt(newI, j) && this.isEmptyAt(newI2, j) && (i == 6 || i == 1) && moves.push({i: newI2, j});
+    !this.isEmptyAt(newI, j-1) && this.hasIndex(newI, j-1) && moves.push({i: newI, j: j-1});
+    !this.isEmptyAt(newI, j+1) && this.hasIndex(newI, j+1) && moves.push({i: newI, j: j+1});
+    return moves;
+  }
+
+  getRookMoves(i,j,isBlack) {
+    let moves = [];
+    return moves;
+  }
+
+  getHorseMoves(i,j,isBlack) {
+    let moves = [];
+    return moves;
+  }
+
+  getBishopMoves(i,j,isBlack) {
+    let moves = [];
+    return moves;
+  }
+
+  getQueenMoves(i,j,isBlack) {
+    let moves = [];
+    return moves;
+  }
+
+  getKingMoves(i,j,isBlack) {
+    let moves = [];
+    return moves;
+  }
+
+  getValidMoves(i, j) {
+    let { piece, isBlack } = this.getPieceAt(i, j);
+    let moves = []
+    let validMoves = [];
+    switch (piece)
+    {
+      case PIECES.none: return [];
+      case PIECES.pawn: moves = this.getPawnMoves(i,j,isBlack); break;
+      case PIECES.rook: moves = this.getRookMoves(i,j,isBlack); break;
+      case PIECES.horse: moves = this.getHorseMoves(i,j,isBlack); break;
+      case PIECES.bishop: moves = this.getBishopMoves(i,j,isBlack); break;
+      case PIECES.queen: moves = this.getQueenMoves(i,j,isBlack); break;
+      case PIECES.king: moves = this.getKingMoves(i,j,isBlack); break;
     }
-    // TODO check if move is in correct direction / distance for the piece
-    // TODO check if another piece blocks the moves
-    // TODO check if the move puts you into check
-    // TODO check if the move is special(castle, la possainte)
-    return true;
+    console.log("moves available", moves, i, j, isBlack);
+    moves.forEach(move => {
+      let toPiece = this.getPieceAt(move.i, move.j);
+      if (toPiece.piece == PIECES.none || toPiece.isBlack != isBlack)
+      {
+      // TODO check if move is in correct direction / distance for the piece
+      // TODO check if another piece blocks the moves
+      // TODO check if the move puts you into check
+      // TODO check if the move is special(castle, la possainte)
+        validMoves.push(move);
+      }
+    });
+    console.log("valid moves", validMoves)
+    return validMoves;
+  }
+
+  isMoveValid(fromI, fromJ, toI, toJ) {
+    let isValid = false;
+    this.getValidMoves(fromI, fromJ).forEach(move => {
+      console.log("compare move", move, toI, toJ);
+      if (move.i == toI && move.j == toJ) isValid = true;
+    })
+    return isValid;
   }
 
 }
