@@ -16,6 +16,7 @@ class Board extends Component {
       chess,
       selected: null,
       history: [],
+      future: [],
       lastMove: null
     }
   }
@@ -27,24 +28,28 @@ class Board extends Component {
     let { chess, selected, history } = this.state;
     if (selected && chess.isMoveValid(selected.i, selected.j, i, j)) {
       history.push(chess.copy());
-      console.log("history", history);
-      let fromI = selected.i;
-      let fromJ = selected.j;
-      let toI = i;
-      let toJ = j;
-      chess.setPieceAt(fromI, fromJ, {piece:'-', isWhite: false})
-      chess.setPieceAt(toI, toJ, selected.piece)
-      let lastMove = {fromI, fromJ, toI, toJ}
-      return this.setState({chess, selected: null, history, lastMove});
+      let lastMove = chess.movePiece(selected.i, selected.j, i, j, selected.piece);
+      return this.setState({chess, selected: null, history, future: [], lastMove});
     }
     this.setState({selected: selection})
   }
 
   onPressUndo = () => {
-    let { history } = this.state;
+    let { history, future } = this.state;
+    if (history.length < 1) return;
+    future.push(this.state.chess.copy());
     let chess = new ChessModel(history.pop());
-    this.setState({history, chess, lastMove: null});
+    this.setState({history, future, chess, lastMove: null});
   }
+
+  onPressRedo = () => {
+    let { history, future } = this.state;
+    if (future.length < 1) return;
+    history.push(this.state.chess.copy());
+    let chess = new ChessModel(future.pop());
+    this.setState({history, future, chess, lastMove: null});
+  }
+
 
   render () {
     let {selected, history, lastMove} = this.state;
@@ -71,6 +76,7 @@ class Board extends Component {
     }
 
     cellRows.push(<RoundedButton onPress={this.onPressUndo} key={i} style={styles.cellRow} text="Undo" />)
+    cellRows.push(<RoundedButton onPress={this.onPressRedo} key={i+1} style={styles.cellRow} text="Redo" />)
     return (
       <View style={styles.container}>{cellRows}</View>
     )

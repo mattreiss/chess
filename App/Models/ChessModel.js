@@ -1,6 +1,6 @@
 import { PIECES } from '../Constants';
 
-const cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+const cols = ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a'];
 const rows = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
 const pieceObject = (piece, isBlack) => {
@@ -43,6 +43,8 @@ const getValue = (row, col) => {
 export default class ChessModel {
   constructor(obj = {}) {
     this.map = obj;
+    this.lastMove = {};
+    this.removeOnMove = {}
     if (obj.a1) return;
     console.log("constructing new chess model map", rows, cols);
     rows.forEach(row => {
@@ -74,9 +76,21 @@ export default class ChessModel {
     this.map[key] = piece;
   }
 
+  movePiece(fromI, fromJ, toI, toJ, piece) {
+    this.setPieceAt(fromI, fromJ, {piece: PIECES.none})
+    this.setPieceAt(toI, toJ, piece)
+    this.lastMove = {fromI, fromJ, toI, toJ, piece: piece.piece};
+    console.log("removeOnMove", this.removeOnMove, this.map);
+    if (this.removeOnMove.i && this.removeOnMove.j) {
+      this.setPieceAt(this.removeOnMove.i, this.removeOnMove.j, {piece: PIECES.none});
+      this.removeOnMove = {};
+    }
+    return this.lastMove;
+  }
+
   copy() {
     let mapCopy = Object.assign({}, this.map);
-    return mapCopy;
+    return JSON.parse(JSON.stringify(mapCopy));
   }
 
   hasIndex(i, j) {
@@ -89,6 +103,7 @@ export default class ChessModel {
     return piece == PIECES.none;
   }
 
+
   getPawnMoves(i,j,isBlack) {
     let moves = [];
     let newI = isBlack ? i + 1 : i - 1;
@@ -97,6 +112,17 @@ export default class ChessModel {
     this.isEmptyAt(newI, j) && this.isEmptyAt(newI2, j) && (i == 6 || i == 1) && moves.push({i: newI2, j});
     !this.isEmptyAt(newI, j-1) && this.hasIndex(newI, j-1) && moves.push({i: newI, j: j-1});
     !this.isEmptyAt(newI, j+1) && this.hasIndex(newI, j+1) && moves.push({i: newI, j: j+1});
+    if (
+      this.lastMove
+      && this.lastMove.piece == PIECES.pawn
+      && Math.abs(this.lastMove.fromI - i) == 2
+      && this.lastMove.toI == i
+      && (this.lastMove.fromI == 6 || this.lastMove.fromI == 1)) {
+        let isLeft = this.lastMove.toJ == j - 1
+        let newJ = isLeft ? j - 1 : j + 1;
+        moves.push({i: newI, j: newJ, lastMove: this.lastMove});
+    }
+
     return moves;
   }
 
@@ -159,7 +185,13 @@ export default class ChessModel {
     let isValid = false;
     this.getValidMoves(fromI, fromJ).forEach(move => {
       console.log("compare move", move, toI, toJ);
-      if (move.i == toI && move.j == toJ) isValid = true;
+      if (move.i == toI && move.j == toJ) {
+        isValid = true;
+        console.log("move lastMove", move)
+        if (move.lastMove) {
+          this.removeOnMove = {i:move.lastMove.toI, j:move.lastMove.toJ};
+        }
+      }
     })
     return isValid;
   }
