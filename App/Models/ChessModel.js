@@ -156,33 +156,19 @@ export default class ChessModel {
 
   getHorseMoves(i,j,isBlack) {
     let moves = [];
-    var row = i + 2;
-    var col = j + 1;
-    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
-    row = i + 2;
-    col = j - 1;
-    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
-    row = i + 2;
-    col = j + 1;
-    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
-    row = i + 1;
-    col = j - 2;
-    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
-    row = i + 1;
-    col = j + 2;
-    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
-    row = i - 2;
-    col = j + 1;
-    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
-    row = i - 2;
-    col = j - 1;
-    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
-    row = i - 1;
-    col = j - 2;
-    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
-    row = i - 1;
-    col = j + 2;
-    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    let spaces = [
+      {row: i + 2, col: j - 1},
+      {row: i + 2, col: j + 1},
+      {row: i - 2, col: j - 1},
+      {row: i - 2, col: j + 1},
+      {row: i + 1, col: j - 2},
+      {row: i + 1, col: j + 2},
+      {row: i - 1, col: j - 2},
+      {row: i - 1, col: j + 2}
+    ];
+    spaces.forEach(({row,col}) => {
+      if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    })
     return moves;
   }
 
