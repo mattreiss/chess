@@ -59,21 +59,34 @@ export default class ChessModel {
   isEmpty() {
     return this.map && this.map !== {};
   }
+
+  containsIndex(i, j) {
+    return (i >= 0 && i < rows.length && j >= 0 && j < cols.length);
+  }
+
   getKeyAt(i, j) {
-    if (i < 0 || i >= rows.length || j < 0 || j >= cols.length) return;
+    if (!this.containsIndex(i, j)) return;
     let row = rows[i];
     let col = cols[j];
     return getKey(row, col);
   }
 
   getPieceAt(i, j) {
+    if (!this.containsIndex(i, j)) return;
     let key = this.getKeyAt(i, j);
     return this.map[key];
   }
 
   setPieceAt(i, j, piece) {
+    if (!this.containsIndex(i, j)) return;
     let key = this.getKeyAt(i, j);
     this.map[key] = piece;
+  }
+
+  isEmptyAt(i,j) {
+    if (!this.containsIndex(i,j)) return false;
+    let { piece } = this.getPieceAt(i, j);
+    return piece == PIECES.none;
   }
 
   movePiece(fromI, fromJ, toI, toJ, piece) {
@@ -93,16 +106,10 @@ export default class ChessModel {
     return JSON.parse(JSON.stringify(mapCopy));
   }
 
-  hasIndex(i, j) {
-    return !(i < 0 || i >= rows.length || j < 0 || j >= rows.length);
+  canAttack(i, j, isBlack) {
+    var next = this.getPieceAt(i, j);
+    return (next && next.isBlack != isBlack)
   }
-
-  isEmptyAt(i,j) {
-    if (!this.hasIndex(i,j)) return false;
-    let { piece } = this.getPieceAt(i, j);
-    return piece == PIECES.none;
-  }
-
 
   getPawnMoves(i,j,isBlack) {
     let moves = [];
@@ -110,8 +117,8 @@ export default class ChessModel {
     let newI2 = isBlack ? i + 2 : i - 2;
     this.isEmptyAt(newI, j) && moves.push({i: newI, j});
     this.isEmptyAt(newI, j) && this.isEmptyAt(newI2, j) && (i == 6 || i == 1) && moves.push({i: newI2, j});
-    !this.isEmptyAt(newI, j-1) && this.hasIndex(newI, j-1) && moves.push({i: newI, j: j-1});
-    !this.isEmptyAt(newI, j+1) && this.hasIndex(newI, j+1) && moves.push({i: newI, j: j+1});
+    !this.isEmptyAt(newI, j-1) && this.containsIndex(newI, j-1) && moves.push({i: newI, j: j-1});
+    !this.isEmptyAt(newI, j+1) && this.containsIndex(newI, j+1) && moves.push({i: newI, j: j+1});
     if (
       this.lastMove
       && this.lastMove.piece == PIECES.pawn
@@ -120,7 +127,7 @@ export default class ChessModel {
       && (this.lastMove.fromI == 6 || this.lastMove.fromI == 1)) {
         let isLeft = this.lastMove.toJ == j - 1
         let newJ = isLeft ? j - 1 : j + 1;
-        moves.push({i: newI, j: newJ, lastMove: this.lastMove});
+        moves.push({i: newI, j: newJ, lastMove: this.lastMove}); //de passant
     }
 
     return moves;
@@ -128,11 +135,54 @@ export default class ChessModel {
 
   getRookMoves(i,j,isBlack) {
     let moves = [];
+    var row;
+    var col;
+
+    // up
+    for (row = i + 1; row < rows.length && this.isEmptyAt(row, j); row++) moves.push({i: row, j})
+    if (this.canAttack(row, j, isBlack)) moves.push({i: row, j})
+    // down
+    for (row = i - 1; row >= 0 && this.isEmptyAt(row, j); row--) moves.push({i: row, j})
+    if (this.canAttack(row, j, isBlack)) moves.push({i: row, j})
+    // left
+    for (col = j - 1; col >= 0 && this.isEmptyAt(i, col); col--) moves.push({i, j: col})
+    if (this.canAttack(i, col, isBlack)) moves.push({i, j: col})
+    // right
+    for (col = j + 1; col < cols.length && this.isEmptyAt(i, col); col++) moves.push({i, j: col})
+    if (this.canAttack(i, col, isBlack)) moves.push({i, j: col})
+
     return moves;
   }
 
   getHorseMoves(i,j,isBlack) {
     let moves = [];
+    var row = i + 2;
+    var col = j + 1;
+    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    row = i + 2;
+    col = j - 1;
+    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    row = i + 2;
+    col = j + 1;
+    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    row = i + 1;
+    col = j - 2;
+    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    row = i + 1;
+    col = j + 2;
+    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    row = i - 2;
+    col = j + 1;
+    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    row = i - 2;
+    col = j - 1;
+    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    row = i - 1;
+    col = j - 2;
+    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
+    row = i - 1;
+    col = j + 2;
+    if (this.isEmptyAt(row, col) || this.canAttack(row, col)) moves.push({i: row, j: col})
     return moves;
   }
 
@@ -142,8 +192,7 @@ export default class ChessModel {
   }
 
   getQueenMoves(i,j,isBlack) {
-    let moves = [];
-    return moves;
+    return this.getRookMoves(i,j,isBlack).concat(this.getBishopMoves(i,j,isBlack));
   }
 
   getKingMoves(i,j,isBlack) {
@@ -168,7 +217,7 @@ export default class ChessModel {
     console.log("moves available", moves, i, j, isBlack);
     moves.forEach(move => {
       let toPiece = this.getPieceAt(move.i, move.j);
-      if (toPiece.piece == PIECES.none || toPiece.isBlack != isBlack)
+      if (toPiece && (toPiece.piece == PIECES.none || toPiece.isBlack != isBlack))
       {
       // TODO check if move is in correct direction / distance for the piece
       // TODO check if another piece blocks the moves
