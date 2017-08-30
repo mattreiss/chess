@@ -1,6 +1,7 @@
 // Buttons
 import RoundedButton from './Buttons/RoundedButton';
 import FullButton from './Buttons/FullButton';
+import HalfButton from './Buttons/HalfButton';
 
 // Chess
 import Board from './Chess/Board';
@@ -10,6 +11,7 @@ export {
   // Buttons
   RoundedButton,
   FullButton,
+  HalfButton,
 
   //Chess
   Board,

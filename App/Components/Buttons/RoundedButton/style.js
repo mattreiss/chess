@@ -11,7 +11,6 @@ export default StyleSheet.create({
     borderRadius: 5
   },
   text: {
-    marginTop: Metrics.baseMargin,
     marginHorizontal: Metrics.baseMargin,
     textAlign: 'center',
     fontFamily: Fonts.type.base,

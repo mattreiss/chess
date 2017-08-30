@@ -3,7 +3,7 @@ import { Colors, Metrics, Fonts } from '../../../Themes/'
 
 export default StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    width: Metrics.screenWidth / 2,
     paddingVertical: Metrics.section,
     backgroundColor: Colors.bloodOrange
   },

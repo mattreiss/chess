@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, Image, Alert } from 'react-native'
 import { ChessModel } from '../../../Models';
-import { RoundedButton } from '../../../Components'
+import { FullButton, HalfButton } from '../../../Components'
 import { Colors, Metrics, Fonts } from '../../../Themes/'
 import Piece from '../Piece'
 import styles from './style'
@@ -32,11 +32,8 @@ class Board extends Component {
           let isGameOver = chess.isGameOver();
           if (isGameOver) {
             Alert.alert("Check Mate", isGameOver, [
-              {text: 'New Game', onPress: () => {
-                  chess = new ChessModel();
-                  this.setState({chess, history: [], future: [], lastMove: null, selected: null});
-                }
-              }
+              {text: 'New Game', onPress: this.onPressNewGame },
+              {text: 'Okay'}
             ]);
           }
         }
@@ -59,6 +56,10 @@ class Board extends Component {
     history.push(this.state.chess.copy());
     let chess = new ChessModel(future.pop());
     this.setState({history, future, chess, lastMove: null});
+  }
+
+  onPressNewGame = () => {
+    this.setState({chess: new ChessModel(), history: [], future: [], lastMove: null, selected: null});
   }
 
 
@@ -86,8 +87,13 @@ class Board extends Component {
       cellRows.push(<View key={i} style={styles.cellRow}>{cells}</View>)
     }
 
-    cellRows.push(<RoundedButton onPress={this.onPressUndo} key={i} style={styles.cellRow} text="Undo" />)
-    cellRows.push(<RoundedButton onPress={this.onPressRedo} key={i+1} style={styles.cellRow} text="Redo" />)
+    cellRows.push(
+      <View style={{flexDirection: 'row'}}>
+        <HalfButton onPress={this.onPressUndo} key={i} text="Undo" color={this.state.history.length && 'rgba(50,100,255,0.5)'}/>
+        <HalfButton onPress={this.onPressRedo} key={i+1} text="Redo" color={this.state.future.length && Colors.bloodOrange}/>
+      </View>
+    )
+    cellRows.push(<FullButton onPress={this.onPressNewGame} key={i+2} style={styles.cellRow} text="New Game" />)
     return (
       <View style={styles.container}>{cellRows}</View>
     )
