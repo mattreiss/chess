@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, Image } from 'react-native'
+import { Text, View, TouchableOpacity, Image, Alert } from 'react-native'
 import { ChessModel } from '../../../Models';
 import { RoundedButton } from '../../../Components'
 import { Colors, Metrics, Fonts } from '../../../Themes/'
@@ -11,7 +11,6 @@ class Board extends Component {
   constructor(props) {
     super(props);
     let chess = new ChessModel();
-    console.log("chess board", chess)
     this.state = {
       chess,
       selected: null,
@@ -23,13 +22,25 @@ class Board extends Component {
 
   onPressCell(i, j) {
     let piece = this.state.chess.getPieceAt(i, j);
-    console.log("pressed cell", piece, i, j, this.state.selected);
     let selection = { piece, i, j };
     let { chess, selected, history } = this.state;
     if (selected && chess.isMoveValid(selected.i, selected.j, i, j)) {
       history.push(chess.copy());
       let lastMove = chess.movePiece(selected.i, selected.j, i, j, selected.piece);
-      return this.setState({chess, selected: null, history, future: [], lastMove});
+      return this.setState({chess, selected: null, history, future: [], lastMove},
+        () => {
+          let isGameOver = chess.isGameOver();
+          if (isGameOver) {
+            Alert.alert("Check Mate", isGameOver, [
+              {text: 'New Game', onPress: () => {
+                  chess = new ChessModel();
+                  this.setState({chess, history: [], future: [], lastMove: null, selected: null});
+                }
+              }
+            ]);
+          }
+        }
+      );
     }
     this.setState({selected: selection})
   }
