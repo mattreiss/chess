@@ -1,7 +1,5 @@
-import ScreenNavigator from "./ScreenNavigator";
-import * as styles from "./styles";
+import DrawerNavigator from "./DrawerNavigator";
 
 export {
-    ScreenNavigator,
-    styles,
+    DrawerNavigator,
 }

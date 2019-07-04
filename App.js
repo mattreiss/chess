@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { ScreenNavigator } from './src/components/navigators';
+import { DrawerNavigator } from './src/components/navigators';
 import * as Redux from './src/data/redux/Redux';
 
 export default class App extends React.Component {
@@ -30,7 +30,7 @@ export default class App extends React.Component {
     return (
       <Provider store={Redux.store}>
         <PersistGate loading={this.renderLoading()} persistor={Redux.persistor}>
-          <ScreenNavigator />
+          <DrawerNavigator />
         </PersistGate>
       </Provider>
     );

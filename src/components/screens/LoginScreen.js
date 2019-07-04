@@ -5,7 +5,7 @@ import {
   View
 } from 'react-native';
 import { connect } from 'react-redux';
-import { NavigateActions, MainActions } from '../../data/redux/actions';
+import { MainActions } from '../../data/redux/actions';
 import { Colors, Sizes, Languages } from '../../constants';
 import { Screen } from '../views';
 import { TextButton } from '../buttons';
@@ -15,17 +15,14 @@ const Styles = StyleSheet.create(LoginScreenStyle);
 
 const mapStateToProps = (state) => {
   let { language } = state.main;
-  // let { screenProps } = state.navigate;
   return {
     main: { language },
-    // navigate: { screenProps }
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     init: () => dispatch(MainActions.init()),
-    setScreen: screen => dispatch(NavigateActions.setScreen(screen))
   }
 }
 
@@ -34,12 +31,11 @@ export default class LoginScreen extends React.Component {
 
   render() {
     let { language } = this.props.main;
-    let { setScreen, screenProps } = this.props;
-    console.log("screenProps", screenProps);
+    let { navigate } = this.props.navigation;
     return (
       <View style={Styles.container}>
         <TextButton
-          onClick={() => setScreen("CameraScreen")}
+          onClick={() => navigate("CameraScreen")}
           text={Languages[language].helloText + " LoginScreen"}/>
       </View>
     );

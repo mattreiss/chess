@@ -5,7 +5,7 @@ import {
   View
 } from 'react-native';
 import { connect } from 'react-redux';
-import { NavigateActions, MainActions } from '../../data/redux/actions';
+import { MainActions } from '../../data/redux/actions';
 import { Colors, Sizes, Languages } from '../../constants';
 import { Screen } from '../views';
 import { TextButton } from '../buttons';
@@ -15,17 +15,14 @@ const Styles = StyleSheet.create(CameraScreenStyle);
 
 const mapStateToProps = (state) => {
   let { language } = state.main;
-  let { screen } = state.navigate;
   return {
     main: { language },
-    navigate: { screen }
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     init: () => dispatch(MainActions.init()),
-    setScreen: screen => dispatch(NavigateActions.setScreen(screen))
   }
 }
 
@@ -34,11 +31,11 @@ export default class CameraScreen extends React.Component {
 
   render() {
     let { language } = this.props.main;
-    let { setScreen } = this.props;
+    let { navigate } = this.props.navigation;
     return (
       <View style={Styles.container}>
         <TextButton
-          onClick={() => setScreen("MainScreen")}
+          onClick={() => navigate("MainScreen")}
           text={Languages[language].helloText + " CameraScreen"}/>
       </View>
     );

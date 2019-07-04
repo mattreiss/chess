@@ -5,7 +5,7 @@ import {
   View
 } from 'react-native';
 import { connect } from 'react-redux';
-import { NavigateActions, MainActions } from '../../data/redux/actions';
+import { MainActions } from '../../data/redux/actions';
 import { Colors, Sizes, Languages } from '../../constants';
 import { Screen } from '../views';
 import { TextButton } from '../buttons';
@@ -15,10 +15,8 @@ const Styles = StyleSheet.create(MainScreenStyle);
 
 const mapStateToProps = (state) => {
   let { language } = state.main;
-  let { screen } = state.navigate;
   return {
     main: { language },
-    navigate: { screen }
   }
 }
 
@@ -26,7 +24,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     init: () => dispatch(MainActions.init()),
     setLanguage: lang => dispatch(MainActions.setLanguage(lang)),
-    setScreen: (screen, props) => dispatch(NavigateActions.setScreen(screen, props))
   }
 }
 
@@ -35,12 +32,16 @@ export default class MainScreen extends React.Component {
 
   render() {
     let { language } = this.props.main;
-    let { setScreen, setLanguage } = this.props;
+    let { navigate, openDrawer, closeDrawer } = this.props.navigation;
     return (
       <Screen>
         <TextButton
-          onClick={() => setScreen("HomeScreen", {testProp: 'It worked!'})}
+          onClick={() => navigate("HomeScreen", {testProp: 'It worked!'})}
           text={Languages[language].helloText + " MainScreen"}/>
+
+        <TextButton
+          onClick={openDrawer}
+          text="Open Drawer"/>
 
         <TextButton
           onClick={() => setLanguage("en")}
