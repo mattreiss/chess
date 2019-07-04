@@ -7,6 +7,8 @@ import {
 import { connect } from 'react-redux';
 import { NavigateActions, MainActions } from '../../data/redux/actions';
 import { Colors, Sizes, Languages } from '../../constants';
+import { Screen } from '../views';
+import { TextButton } from '../buttons';
 import { MainSampleStyle } from './styles';
 
 const Styles = StyleSheet.create(MainSampleStyle);
@@ -28,19 +30,18 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-class MainSample extends React.Component {
+export default class MainSample extends React.Component {
 
   render() {
     let { language } = this.props.main;
+    let { setScreen } = this.props;
     return (
       <View style={Styles.container}>
-        <Text style={Styles.text}>
-          {Languages[language].helloText} MainSample!
-        </Text>
+        <TextButton
+          onClick={() => setScreen("MainScreen")}
+          text={Languages[language].helloText + " MainSample"}/>
       </View>
     );
   }
 
 }
-
-export default MainSample;

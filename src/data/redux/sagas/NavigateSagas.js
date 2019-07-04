@@ -2,11 +2,11 @@ import { put, call } from 'redux-saga/effects';
 import { NavigateActions } from '../actions';
 
 export function * init() {
-  console.log("init navigage saga");
+  console.log("init navigate saga");
 }
 
 export function * setScreen({ screen }) {
-  console.log("setScreen navigage saga", screen);
+  console.log("setScreen navigate saga", screen);
 }
 
 export default {};

@@ -20,10 +20,9 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Reducers ------------- */
 const merge = (state, data) => Object.assign({}, state, data);
 const init = (state) => INITIAL_STATE;
-const putObject = (state, object) => merge(state, object);
 
 /* ------------- Hookup Reducers To Types ------------- */
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.INIT]: init,
-  [Types.SET_SCREEN]: putObject,
+  [Types.SET_SCREEN]: merge,
 });

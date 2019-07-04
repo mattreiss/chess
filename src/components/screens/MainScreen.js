@@ -4,23 +4,61 @@ import {
   Text,
   View
 } from 'react-native';
+import { connect } from 'react-redux';
+import { NavigateActions, MainActions } from '../../data/redux/actions';
 import { Colors, Sizes, Languages } from '../../constants';
+import { Screen } from '../views';
+import { TextButton } from '../buttons';
 import { MainScreenStyle } from './styles';
 
 const Styles = StyleSheet.create(MainScreenStyle);
 
-class MainScreen extends React.Component {
+const mapStateToProps = (state) => {
+  let { language } = state.main;
+  let { screen } = state.navigate;
+  return {
+    main: { language },
+    navigate: { screen }
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    init: () => dispatch(MainActions.init()),
+    setLanguage: lang => dispatch(MainActions.setLanguage(lang)),
+    setScreen: screen => dispatch(NavigateActions.setScreen(screen))
+  }
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
+export default class MainScreen extends React.Component {
 
   render() {
+    let { language } = this.props.main;
+    let { setScreen, setLanguage } = this.props;
     return (
-      <View style={Styles.container}>
-        <Text style={Styles.text}>
-          {Languages.helloText} MainScreen!
-        </Text>
-      </View>
+      <Screen>
+        <TextButton
+          onClick={() => setScreen("HomeScreen")}
+          text={Languages[language].helloText + " MainScreen"}/>
+
+        <TextButton
+          onClick={() => setLanguage("en")}
+          text="English"/>
+
+        <TextButton
+          onClick={() => setLanguage("es")}
+          text="Spanish"/>
+
+        <TextButton
+          onClick={() => setLanguage("it")}
+          text="Italian"/>
+
+        <TextButton
+          onClick={() => setLanguage("fr")}
+          text="French"/>
+      </Screen>
     );
   }
 
 }
-
-export default MainScreen;

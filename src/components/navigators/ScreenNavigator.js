@@ -6,15 +6,16 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Colors, Sizes, Languages } from '../../constants';
+import * as Screens from '../screens';
 import { ScreenNavigatorStyle } from './styles';
 
 const Styles = StyleSheet.create(ScreenNavigatorStyle);
 
 const mapStateToProps = (state) => {
-  let { language } = state.main;
+  // let { language } = state.main;
   let { screen } = state.navigate;
   return {
-    main: { language },
+    // main: { language },
     navigate: { screen }
   }
 }
@@ -28,12 +29,15 @@ const mapDispatchToProps = (dispatch) => {
 export default class ScreenNavigator extends React.Component {
   render() {
     let { screen } = this.props.navigate;
-    let { language } = this.props.main;
-    console.log("screen nav", screen, language);
+    console.log("screen nav", screen);
+    let ScreenComponent = Screens[screen];
+    if (ScreenComponent) {
+      return <ScreenComponent />
+    }
     return (
       <View style={Styles.container}>
         <Text style={Styles.text}>
-          {Languages[language].helloText} ScreenNavigator!
+          Invalid Screen {screen}!
         </Text>
       </View>
     );

@@ -1,9 +1,7 @@
-import PostModel from "./PostModel";
+import AccountModel from "./AccountModel";
 import ProfileModel from "./ProfileModel";
-import UserModel from "./UserModel";
 
 export {
-    PostModel,
+    AccountModel,
     ProfileModel,
-    UserModel,
 }

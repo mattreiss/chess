@@ -24,7 +24,7 @@ function createComponent() {
   mkdir -p $folder
   dest="${folder}/${name}.js"
   cp _samples/MainSample.js $dest
-  sed -i '' "s/MainSample/${name}/g" $dest
+  sed -i "s/MainSample/${name}/g" $dest
 }
 
 function createStyles() {
@@ -35,7 +35,7 @@ function createStyles() {
 if [[ $folder != "" && $name != "" ]]; then
   createComponent
   createStyles
-  $scriptsDir/index.sh "components/$folder"
+  $scriptsDir/index.sh "components/$folder" -r
 else
   echo "missing folder and name args"
   help

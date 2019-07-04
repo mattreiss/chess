@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Soapley",
-    "slug": "soapley",
+    "name": "App",
+    "slug": "app",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [

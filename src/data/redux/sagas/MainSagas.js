@@ -2,7 +2,7 @@ import { put, call } from 'redux-saga/effects';
 import { MainActions } from '../actions';
 
 export function * init() {
-  console.log("init main saga");
+  console.log("MainSaga.init()");
 }
 
 export default {};

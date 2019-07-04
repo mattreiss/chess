@@ -8,7 +8,8 @@ import { RootSaga } from './sagas';
 /* ------------- Assemble The Reducers ------------- */
 const rootReducer = combineReducers({
   main: require('./actions/MainActions').reducer,
-  navigate: require('./actions/NavigateActions').reducer
+  navigate: require('./actions/NavigateActions').reducer,
+  user: require('./actions/UserActions').reducer
 })
 
 /* ------------- Redux Configuration ------------- */

@@ -15,24 +15,25 @@ currentDir=$(pwd)
 scriptsDir="$(echo "${scriptsDir/./$currentDir}")"
 
 cd $scriptsDir
-cd ../src/redux
+cd ../src/data/redux
 
 name=$1
 
 function createActions() {
-  echo "actions" > actions/${name}Actions.js
+  cp actions/MainActions.js actions/${name}Actions.js
+  sed -i "s/Main/${name}/g" actions/${name}Actions.js
 }
 
 function createSagas() {
-  echo "sagas" > sagas/${name}Sagas.js
+  cp sagas/MainSagas.js sagas/${name}Sagas.js
+  sed -i "s/Main/${name}/g" sagas/${name}Sagas.js
 }
 
 if [[ $name != "" ]]; then
   createActions
   createSagas
+  $scriptsDir/index.sh "data/redux" -r
 else
   echo "missing name arg"
   help
 fi
-
-$scriptsDir/index.sh "redux" -r

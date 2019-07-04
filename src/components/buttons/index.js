@@ -1,13 +1,7 @@
-import AnimatedButton from "./AnimatedButton";
-import IconButton from "./IconButton";
-import ImageButton from "./ImageButton";
-import ReduxButton from "./ReduxButton";
 import TextButton from "./TextButton";
+import * as styles from "./styles";
 
 export {
-    AnimatedButton,
-    IconButton,
-    ImageButton,
-    ReduxButton,
     TextButton,
+    styles,
 }

@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-class Profile extends React.Component {
+export default class Profile extends React.Component {
 
   render() {
     let { language } = this.props.main;
@@ -42,5 +42,3 @@ class Profile extends React.Component {
   }
 
 }
-
-export default Profile;
