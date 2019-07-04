@@ -13,10 +13,10 @@ const Styles = StyleSheet.create(ScreenNavigatorStyle);
 
 const mapStateToProps = (state) => {
   // let { language } = state.main;
-  let { screen } = state.navigate;
+  let { screen, screenProps } = state.navigate;
   return {
     // main: { language },
-    navigate: { screen }
+    navigate: { screen, screenProps }
   }
 }
 
@@ -28,11 +28,11 @@ const mapDispatchToProps = (dispatch) => {
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ScreenNavigator extends React.Component {
   render() {
-    let { screen } = this.props.navigate;
+    let { screen, screenProps } = this.props.navigate;
     console.log("screen nav", screen);
     let ScreenComponent = Screens[screen];
     if (ScreenComponent) {
-      return <ScreenComponent />
+      return <ScreenComponent screenProps={screenProps} />
     }
     return (
       <View style={Styles.container}>

@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     init: () => dispatch(MainActions.init()),
     setLanguage: lang => dispatch(MainActions.setLanguage(lang)),
-    setScreen: screen => dispatch(NavigateActions.setScreen(screen))
+    setScreen: (screen, props) => dispatch(NavigateActions.setScreen(screen, props))
   }
 }
 
@@ -39,7 +39,7 @@ export default class MainScreen extends React.Component {
     return (
       <Screen>
         <TextButton
-          onClick={() => setScreen("HomeScreen")}
+          onClick={() => setScreen("HomeScreen", {testProp: 'It worked!'})}
           text={Languages[language].helloText + " MainScreen"}/>
 
         <TextButton

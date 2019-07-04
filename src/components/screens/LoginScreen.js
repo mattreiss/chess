@@ -15,10 +15,10 @@ const Styles = StyleSheet.create(LoginScreenStyle);
 
 const mapStateToProps = (state) => {
   let { language } = state.main;
-  let { screen } = state.navigate;
+  // let { screenProps } = state.navigate;
   return {
     main: { language },
-    navigate: { screen }
+    // navigate: { screenProps }
   }
 }
 
@@ -34,7 +34,8 @@ export default class LoginScreen extends React.Component {
 
   render() {
     let { language } = this.props.main;
-    let { setScreen } = this.props;
+    let { setScreen, screenProps } = this.props;
+    console.log("screenProps", screenProps);
     return (
       <View style={Styles.container}>
         <TextButton
