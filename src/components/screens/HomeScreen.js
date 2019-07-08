@@ -27,15 +27,33 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class MainScreen extends React.Component {
+export default class HomeScreen extends React.Component {
+
+  componentDidMount() {
+    console.log("HomeScreen mounted");
+  }
+
+  componentWillUnmount() {
+    console.log("HomeScreen unmounted");
+  }
+
+  onDidFocus = (p) => {
+    console.log("onDidFocus HomeScreen");
+  }
+
+  onDidBlur = (p) => {
+    console.log("onDidBlur HomeScreen");
+  }
 
   render() {
     let { language } = this.props.main;
     let { navigate } = this.props.navigation;
     return (
-      <Screen>
+      <Screen
+        onDidFocus={this.onDidFocus}
+        onDidBlur={this.onDidBlur}>
         <TextButton
-          onClick={() => navigate("LoginScreen")}
+          onPress={() => navigate("Main")}
           text={Languages[language].helloText + " HomeScreen"}/>
       </Screen>
     );

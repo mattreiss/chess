@@ -35,7 +35,7 @@ export default class SignupScreen extends React.Component {
     return (
       <View style={Styles.container}>
         <TextButton
-          onClick={() => navigate("MainScreen")}
+          onPress={() => navigate("Main")}
           text={Languages[language].helloText + " SignupScreen"}/>
       </View>
     );

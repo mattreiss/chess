@@ -11,9 +11,9 @@ const Styles = StyleSheet.create(TextButtonStyle);
 export default class TextButton extends React.Component {
 
   render() {
-    let { text } = this.props;
+    let { text, onPress, style } = this.props;
     return (
-      <TouchableOpacity {...this.props}>
+      <TouchableOpacity style={style} onPress={onPress}>
         <Text style={Styles.text}>
           {text}
         </Text>

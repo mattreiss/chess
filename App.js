@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { DrawerNavigator } from './src/components/navigators';
-import * as Redux from './src/data/redux/Redux';
+import { useScreens } from 'react-native-screens';
+import { AuthNavigator } from './src/components/navigators';
+import { store, persistor } from './src/data/redux/Redux';
 
 export default class App extends React.Component {
   state = {
@@ -12,6 +13,7 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props);
+    useScreens();
   }
 
   componentDidCatch(error,errorInfo) {
@@ -28,9 +30,9 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Provider store={Redux.store}>
-        <PersistGate loading={this.renderLoading()} persistor={Redux.persistor}>
-          <DrawerNavigator />
+      <Provider store={store}>
+        <PersistGate loading={this.renderLoading()} persistor={persistor}>
+          <AuthNavigator />
         </PersistGate>
       </Provider>
     );

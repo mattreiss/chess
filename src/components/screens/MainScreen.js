@@ -30,33 +30,60 @@ const mapDispatchToProps = (dispatch) => {
 @connect(mapStateToProps, mapDispatchToProps)
 export default class MainScreen extends React.Component {
 
+  componentDidMount() {
+    console.log("MainScreen mounted");
+  }
+
+  componentWillUnmount() {
+    console.log("MainScreen unmounted");
+  }
+
+  onDidFocus = (p) => {
+    console.log("onDidFocus MainScreen");
+  }
+
+  onDidBlur = (p) => {
+    console.log("onDidBlur MainScreen");
+  }
+
   render() {
+    let { setLanguage } = this.props;
     let { language } = this.props.main;
     let { navigate, openDrawer, closeDrawer } = this.props.navigation;
     return (
-      <Screen>
+      <Screen
+        onDidFocus={this.onDidFocus}
+        onDidBlur={this.onDidBlur}>
         <TextButton
-          onClick={() => navigate("HomeScreen", {testProp: 'It worked!'})}
+          onPress={() => navigate("Home", {testProp: 'It worked!'})}
           text={Languages[language].helloText + " MainScreen"}/>
 
         <TextButton
-          onClick={openDrawer}
+          onPress={() => navigate("Camera")}
+          text="Camera"/>
+
+        <TextButton
+          onPress={() => navigate("Logout")}
+          text="Logout"/>
+
+        <TextButton
+          onPress={openDrawer}
           text="Open Drawer"/>
 
         <TextButton
-          onClick={() => setLanguage("en")}
+          onPress={() => setLanguage("en")}
           text="English"/>
 
         <TextButton
-          onClick={() => setLanguage("es")}
+          onPress={() => setLanguage("es")}
           text="Spanish"/>
 
         <TextButton
-          onClick={() => setLanguage("it")}
+          onPress={() => setLanguage("it")}
           text="Italian"/>
 
         <TextButton
-          onClick={() => setLanguage("fr")}
+          onPress={() => setLanguage("fr")}
           text="French"/>
       </Screen>
     );

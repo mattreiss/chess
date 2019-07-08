@@ -34,7 +34,7 @@ export default class MainSample extends React.Component {
     return (
       <View style={Styles.container}>
         <TextButton
-          onClick={() => console.log("click")}
+          onPress={() => console.log("click")}
           text={Languages[language].helloText + " MainSample"}/>
       </View>
     );

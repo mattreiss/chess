@@ -35,7 +35,7 @@ export default class CameraScreen extends React.Component {
     return (
       <View style={Styles.container}>
         <TextButton
-          onClick={() => navigate("MainScreen")}
+          onPress={() => navigate("Main")}
           text={Languages[language].helloText + " CameraScreen"}/>
       </View>
     );

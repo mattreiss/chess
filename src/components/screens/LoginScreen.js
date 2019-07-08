@@ -35,8 +35,12 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.container}>
         <TextButton
-          onClick={() => navigate("CameraScreen")}
-          text={Languages[language].helloText + " LoginScreen"}/>
+          onPress={() => navigate("Signup")}
+          text={"Signup"}/>
+
+        <TextButton
+          onPress={() => navigate("App")}
+          text={"Login"}/>
       </View>
     );
   }
