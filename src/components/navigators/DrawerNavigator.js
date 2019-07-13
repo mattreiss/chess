@@ -12,30 +12,66 @@ import {
   SafeAreaView
 } from 'react-navigation';
 import { Colors, Sizes, Languages } from '../../constants';
+import { TextButton, IconButton } from '../buttons';
 import * as Screens from '../screens';
 
 const DrawerScreens = {
-  Main: { screen: Screens.MainScreen },
-  Home: { screen: Screens.HomeScreen }
+  Main: { screen: Screens.MainScreen, icon: 'settings' },
+  Home: { screen: Screens.HomeScreen, icon: 'home' }
 };
 
-const DrawerComponent = props => (
-  <ScrollView>
-    <SafeAreaView
-      style={{flex: 1}}
-      forceInset={{ top: 'always', horizontal: 'never' }}>
-      <DrawerItems {...props} />
-      <View>
-        <Text>Custom Drawer Text</Text>
-      </View>
-    </SafeAreaView>
-  </ScrollView>
-)
+const DrawerItemComponent = props => {
+  let { routeName, icon, onPress, isActive } = props;
+  let color = isActive ? Colors.primary : Colors.grey(128);
+  return (
+    <View style={{flexDirection: 'row', padding: Sizes.margin.base}}>
+      <IconButton
+        name={icon}
+        onPress={onPress}
+        size={Sizes.icons.base2}
+        color={color}
+      />
+      <TextButton
+        text={routeName}
+        onPress={onPress}
+        textStyle={{color, fontSize: Sizes.font.base2}}
+      />
+    </View>
+  )
+}
+
+
+const DrawerComponent = props => {
+  let {
+    navigation,
+    activeItemKey
+  } = props;
+  let drawerItems = [];
+  for (let routeName in DrawerScreens) {
+    drawerItems.push(
+      <DrawerItemComponent
+        key={routeName}
+        routeName={routeName}
+        icon={DrawerScreens[routeName].icon}
+        onPress={() => navigation.navigate(routeName)}
+        isActive={routeName == activeItemKey}
+      />
+    );
+  }
+  return (
+    <ScrollView>
+      <SafeAreaView
+        style={{flex: 1}}
+        forceInset={{ top: 'always', horizontal: 'never' }}>
+        {drawerItems}
+      </SafeAreaView>
+    </ScrollView>
+  );
+}
 
 const DrawerOptions = {
   contentComponent: DrawerComponent,
   contentOptions: {
-    activeTintColor: Colors.primary,
     itemsContainerStyle: {
       marginVertical: 0,
     },

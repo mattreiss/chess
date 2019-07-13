@@ -14,6 +14,7 @@ Colors.danger = Colors.rgb(220, 12, 12);
 Colors.active = Colors.rgb(45, 52, 222);
 Colors.light = Colors.rgb(242, 242, 252);
 Colors.dark = Colors.rgb(10, 22, 22);
+Colors.transparent = Colors.rgba(0,0,0,0);
 
 // variables
 Colors.text = Colors.light;
