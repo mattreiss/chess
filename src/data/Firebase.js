@@ -1,15 +1,15 @@
 import firebase from 'firebase'
 import '@firebase/firestore';
-import FirebaseConfig from '../../config/FirebaseConfig';
+import FirebaseCredentials from '../../private/FirebaseCredentials';
 
-firebase.initializeApp(FirebaseConfig);
+firebase.initializeApp(FirebaseCredentials);
 
 const Firebase = {};
 
 const DB = firebase.firestore();
 
 Firebase.test = () => {
-    return DB.collection("characters").doc("luigi").set({
+    return DB.collection("characters").doc("wario").set({
     employment: "plumber",
     outfitColor: "red",
     specialAttack: "fireball"

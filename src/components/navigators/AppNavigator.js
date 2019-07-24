@@ -13,8 +13,19 @@ import * as Screens from '../screens';
 import DrawerNavigator from './DrawerNavigator';
 import TabNavigator from './TabNavigator';
 
+console.log("Platform.OS", Platform.OS);
+
+const getNavigatorForPlatform = () => {
+  switch (Platform.OS) {
+    case "ios": return TabNavigator;
+    case "android":
+    case "web":
+    default: return DrawerNavigator;
+  }
+}
+
 const StackScreens = {
-  Main: { screen: Platform.OS == 'ios' ? TabNavigator : DrawerNavigator },
+  Main: { screen: getNavigatorForPlatform() },
   Camera: { screen: Screens.CameraScreen },
 };
 
