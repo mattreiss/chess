@@ -29,6 +29,10 @@ const mapDispatchToProps = (dispatch) => {
 @connect(mapStateToProps, mapDispatchToProps)
 export default class LoginScreen extends React.Component {
 
+  componentDidMount() {
+    this.props.init();
+  }
+
   render() {
     let { language } = this.props.main;
     let { navigate } = this.props.navigation;
