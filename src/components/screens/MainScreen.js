@@ -52,6 +52,7 @@ export default class MainScreen extends React.Component {
     let { navigate, openDrawer, closeDrawer } = this.props.navigation;
     return (
       <Screen
+        style={Styles.container}
         onDidFocus={this.onDidFocus}
         onDidBlur={this.onDidBlur}>
         <TextButton

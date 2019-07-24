@@ -4,7 +4,7 @@ let Styles = {};
 
 Styles.container = {
   flex: 1,
-  backgroundColor: Colors.background,
+  backgroundColor: Colors.secondary,
   alignItems: 'center',
   justifyContent: 'center',
 };

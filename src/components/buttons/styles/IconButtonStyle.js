@@ -2,10 +2,11 @@ import { Colors, Sizes } from '../../../constants';
 
 let Styles = {};
 
-Styles.text = {
-  color: Colors.text,
-  fontSize: Sizes.font.base,
-  padding: Sizes.margin.base
+Styles.container = {
+  backgroundColor: Colors.transparent
+};
+
+Styles.icon = {
 }
 
 export default Styles;

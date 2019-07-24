@@ -2,7 +2,8 @@ import React from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  Platform
 } from 'react-native';
 import {
   createStackNavigator,
@@ -10,9 +11,10 @@ import {
 } from 'react-navigation';
 import * as Screens from '../screens';
 import DrawerNavigator from './DrawerNavigator';
+import TabNavigator from './TabNavigator';
 
 const StackScreens = {
-  Main: { screen: DrawerNavigator },
+  Main: { screen: Platform.OS == 'ios' ? TabNavigator : DrawerNavigator },
   Camera: { screen: Screens.CameraScreen },
 };
 
