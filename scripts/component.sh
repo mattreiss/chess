@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function help() {
-  echo "Generates components in ../src/components"
+  # echo "Generates components in ../src/components"
   echo "component.sh <folderName> <fileName>"
 }
 

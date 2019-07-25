@@ -55,6 +55,10 @@ export default class HomeScreen extends React.Component {
         <TextButton
           onPress={() => navigate("Main")}
           text={Languages[language].helloText + " HomeScreen"}/>
+
+        <TextButton
+          onPress={() => navigate("Camera")}
+          text="Camera"/>
       </Screen>
     );
   }

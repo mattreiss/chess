@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function help() {
-  echo "Creates index.js files for ../src"
-  echo "index.sh <optionalDirectory>"
+  # echo "Creates index.js files for ../src"
+  echo "index.sh <optionalDirectory> <optionalOptions>"
 }
 
 if [[ $1 == "help" ]]; then

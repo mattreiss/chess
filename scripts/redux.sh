@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function help() {
-  echo "Generates redux files in ../src/redux"
+  # echo "Generates redux files in ../src/redux"
   echo "redux.sh <name>"
 }
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function help() {
-  echo "Creates apk and ipa builds"
+  # echo "Creates apk and ipa builds"
   echo "build.sh"
 }
 

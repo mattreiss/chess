@@ -27,6 +27,7 @@ const getNavigatorForPlatform = () => {
 const StackScreens = {
   Main: { screen: getNavigatorForPlatform() },
   Camera: { screen: Screens.CameraScreen },
+  Settings: { screen: Screens.SettingsScreen },
 };
 
 const StackOptions = {
