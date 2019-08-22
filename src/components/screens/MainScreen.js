@@ -69,32 +69,12 @@ export default class MainScreen extends React.Component {
         onDidBlur={this.onDidBlur}>
 
         <TextButton
-          onPress={() => navigate("Home", {testProp: 'It worked!'})}
-          text={Languages[language].helloText + " MainScreen"}/>
+          onPress={() => navigate("Game", {testProp: 'It worked!'})}
+          text={"Start Game"}/>
 
         <TextButton
           onPress={openDrawer}
           text="Open Drawer"/>
-
-        <View>
-          <Text>{count}</Text>
-        </View>
-
-        <TextButton
-          onPress={this.onPressAdd}
-          text="Add"/>
-
-        <TextButton
-          onPress={this.onPressSubtract}
-          text="Subtract"/>
-
-        <TextButton
-          onPress={() => navigate("Settings")}
-          text="Settings"/>
-
-        <TextButton
-          onPress={() => navigate("Logout")}
-          text="Logout"/>
 
       </Screen>
     );

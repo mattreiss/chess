@@ -1,4 +1,8 @@
+import {Dimensions, Platform} from 'react-native'
+
 let Sizes = {};
+
+let { width, height } = Dimensions.get('window');
 
 // functions
 Sizes._rangesOf = (base) => ({
@@ -22,7 +26,11 @@ Sizes._rangesOf = (base) => ({
 
 // constants
 Sizes.margin = Sizes._rangesOf(8);
+Sizes.padding = Sizes._rangesOf(8);
 Sizes.font = Sizes._rangesOf(14);
 Sizes.icons = Sizes._rangesOf(28);
+
+Sizes.screenWidth = width;
+Sizes.screenHeight = height;
 
 export default Sizes;

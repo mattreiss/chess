@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import '@firebase/firestore';
+import '@firebase/database';
 import FirebaseCredentials from '../../private/FirebaseCredentials';
 
 firebase.initializeApp(FirebaseCredentials);
@@ -7,6 +8,30 @@ firebase.initializeApp(FirebaseCredentials);
 const Firebase = {};
 
 const DB = firebase.firestore();
+const DB2 = firebase.database();
+
+let detectedFacesRef = null;
+
+Firebase.unmonitor = () => {
+  if (detectedFacesRef) detectedFacesRef.off();
+  childAddedRef = null;
+};
+
+Firebase.monitor = async (childAdded) => {
+  console.log("firebase monitor");
+  detectedFacesRef = DB2.ref('detectedFaces/').limitToLast(100);
+  detectedFacesRef.on('child_added', (data) => {
+    console.log("call childAdded", data);
+    childAdded(data);
+  });
+  // detectedFacesRef.on('child_changed', data => {
+  //   console.log("child_changed", data.key, data.val());
+  // });
+  //
+  // detectedFacesRef.on('child_removed', data => {
+  //   console.log("child_removed", data.key, data.val());
+  // });
+}
 
 Firebase.test = async () => {
   // create

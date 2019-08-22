@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { useScreens } from 'react-native-screens';
 import { AuthNavigator } from './src/components/navigators';
+import { GameScreen } from './src/components/screens';
 import { store, persistor } from './src/data/redux/Redux';
 
 export default class App extends React.Component {
@@ -32,7 +33,7 @@ export default class App extends React.Component {
     return (
       <Provider store={store}>
         <PersistGate loading={this.renderLoading()} persistor={persistor}>
-          <AuthNavigator />
+          <GameScreen />
         </PersistGate>
       </Provider>
     );

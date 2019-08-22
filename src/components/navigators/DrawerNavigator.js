@@ -17,6 +17,7 @@ import * as Screens from '../screens';
 
 const DrawerScreens = {
   Main: { screen: Screens.MainScreen, icon: 'settings' },
+  Game: { screen: Screens.GameScreen, icon: 'play' },
   Home: { screen: Screens.HomeScreen, icon: 'home' }
 };
 
