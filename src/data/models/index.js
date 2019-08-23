@@ -1,11 +1,11 @@
 import AccountModel from "./AccountModel";
-import ProfileModel from "./ProfileModel";
+import PlayerModel from "./PlayerModel";
 import BoardModel from "./BoardModel";
 import PieceModel from "./PieceModel";
 
 export {
     AccountModel,
-    ProfileModel,
+    PlayerModel,
     BoardModel,
     PieceModel,
 }

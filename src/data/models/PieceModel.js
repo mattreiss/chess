@@ -13,5 +13,26 @@ export default class PieceModel {
   constructor(name = PieceModel.EMPTY, color = '') {
     this.name = name;
     this.color = color;
+    this.value = this.getValue();
+  }
+
+  getValue() {
+    switch(this.name) {
+      case PieceModel.EMPTY: return 0;
+      case PieceModel.POND: return 1;
+      case PieceModel.KNIGHT:
+      case PieceModel.BISHOP: return 3;
+      case PieceModel.ROOK: return 5;
+      case PieceModel.QUEEN: return 9;
+      case PieceModel.KING: return 4;
+    }
+  }
+
+  isEmpty() {
+    return this.name === PieceModel.EMPTY;
+  }
+
+  isWhite() {
+    return this.color === PieceModel.WHITE;
   }
 }

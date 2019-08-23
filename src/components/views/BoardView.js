@@ -13,37 +13,60 @@ const Styles = StyleSheet.create(BoardViewStyle);
 
 export default class BoardView extends React.Component {
 
-  onClickSquare = (key, pieceModel) => {
-    console.log("clicked square", key, pieceModel)
+  state = {
+    selection: null,
+    selectionMoves: {}
   }
 
-  renderSquare(key, pieceModel) {
+  onPressSquare = (key) => {
+    let { boardModel, movePiece } = this.props;
+    let { selection, selectionMoves } = this.state;
+    if (selectionMoves[key] && typeof movePiece == 'function') {
+      movePiece(selection, key);
+      this.setState({selection: null, selectionMoves: {}});
+      return;
+    }
+    let moves = boardModel.getMoves(key);
+    selectionMoves = {};
+    moves.forEach(move => selectionMoves[move] = true);
+    selection = key;
+    this.setState({selection, selectionMoves});
+  }
+
+  renderSquare(key) {
+    let { boardModel, loading } = this.props;
+    let { selection, selectionMoves } = this.state;
+    let pieceModel = boardModel.map[key];
     let { name, color } = pieceModel;
+    let style = Styles.square;
+    if (selection == key) style = Styles.squareSelection;
+    if (selectionMoves[key]) style = Styles.squareMove;
     return (
       <TextButton
         key={key}
-        style={Styles.square}
-        text={name + color}
-        onClick={() => this.onClickSquare(key, pieceModel)}
+        style={style}
+        text={loading ? '' : name + color + ' ' + key}
+        onPress={() => this.onPressSquare(key)}
       />
     )
   }
 
   renderSquares() {
-    let { boardModel } = this.props;
+    let { boardModel, flipped } = this.props;
     let squares = [];
     let rows = [];
-    boardModel.iterate((row, col) => {
-      let key = col + row;
-      let pieceModel = boardModel.map[key];
-      let square = this.renderSquare(key, pieceModel);
-      squares.push(square);
+    console.log("render squares",flipped)
+    boardModel.forEach(({row, col}) => {
+      let key = boardModel.genKey({row, col});
+      let square = this.renderSquare(key);
+      flipped ? squares.unshift(square) : squares.push(square);
       if (squares.length == 8) {
-        rows.push(
+        let renderedRow = (
           <View key={row} style={Styles.row}>
             {squares}
           </View>
         );
+        flipped ? rows.push(renderedRow) : rows.unshift(renderedRow);
         squares = [];
       }
     })
