@@ -34,7 +34,7 @@ export default class BoardView extends React.Component {
   }
 
   renderSquare(key) {
-    let { boardModel, loading } = this.props;
+    let { boardModel } = this.props;
     let { selection, selectionMoves } = this.state;
     let pieceModel = boardModel.map[key];
     let { name, color } = pieceModel;
@@ -45,7 +45,7 @@ export default class BoardView extends React.Component {
       <TextButton
         key={key}
         style={style}
-        text={loading ? '' : name + color + ' ' + key}
+        text={name + color + ' ' + key}
         onPress={() => this.onPressSquare(key)}
       />
     )
@@ -55,7 +55,7 @@ export default class BoardView extends React.Component {
     let { boardModel, flipped } = this.props;
     let squares = [];
     let rows = [];
-    console.log("render squares",flipped)
+    // console.log("render squares",flipped)
     boardModel.forEach(({row, col}) => {
       let key = boardModel.genKey({row, col});
       let square = this.renderSquare(key);
@@ -75,7 +75,7 @@ export default class BoardView extends React.Component {
 
   render() {
     let { boardModel } = this.props;
-    console.log("BoardView render boardModel", boardModel);
+    // console.log("BoardView render boardModel", boardModel);
     return (
       <View style={Styles.container}>
         {this.renderSquares()}

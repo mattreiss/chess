@@ -17,7 +17,7 @@ Colors.dark = Colors.rgb(10, 22, 22);
 Colors.transparent = Colors.rgba(0,0,0,0);
 
 // variables
-Colors.text = Colors.light;
-Colors.background = Colors.dark;
+Colors.text = Colors.dark;
+Colors.background = Colors.light;
 
 export default Colors;

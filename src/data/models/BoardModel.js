@@ -4,13 +4,20 @@ export default class BoardModel {
   static ROWS = '12345678';
   static COLS = 'abcdefgh';
 
-  constructor() {
-    this.turn = PieceModel.WHITE;
+  constructor(map) {
+    if (this.map) {
+      this.map = map;
+    } else {
+      this.init();
+    }
+  }
+
+  init() {
     this.map = {};
     this.forEach(({row, col}) => {
-        let key = this.genKey({row, col});
-        let val = this.getInitialPiece(key);
-        this.map[key] = val;
+      let key = this.genKey({row, col});
+      let val = this.getInitialPiece(key);
+      this.map[key] = val;
     })
   }
 
@@ -39,26 +46,26 @@ export default class BoardModel {
       BLACK,
       EMPTY
     } = PieceModel
-    if (row >= 3 && row <= 6) return new PieceModel(EMPTY);
-    if (row == 2) return new PieceModel(POND, WHITE);
-    if (row == 7) return new PieceModel(POND, BLACK);
+    if (row >= 3 && row <= 6) return PieceModel.EMPTY_PIECE;
+    if (row == 2) return new PieceModel(POND, WHITE, key);
+    if (row == 7) return new PieceModel(POND, BLACK, key);
     switch(key) {
       case 'a1':
-      case 'h1': return new PieceModel(ROOK, WHITE);
+      case 'h1': return new PieceModel(ROOK, WHITE, key);
       case 'a8':
-      case 'h8': return new PieceModel(ROOK, BLACK);
+      case 'h8': return new PieceModel(ROOK, BLACK, key);
       case 'b1':
-      case 'g1': return new PieceModel(KNIGHT, WHITE);
+      case 'g1': return new PieceModel(KNIGHT, WHITE, key);
       case 'b8':
-      case 'g8': return new PieceModel(KNIGHT, BLACK);
+      case 'g8': return new PieceModel(KNIGHT, BLACK, key);
       case 'c1':
-      case 'f1': return new PieceModel(BISHOP, WHITE);
+      case 'f1': return new PieceModel(BISHOP, WHITE, key);
       case 'c8':
-      case 'f8': return new PieceModel(BISHOP, BLACK);
-      case 'd1': return new PieceModel(QUEEN, WHITE);
-      case 'e1': return new PieceModel(KING, WHITE);
-      case 'd8': return new PieceModel(QUEEN, BLACK);
-      case 'e8': return new PieceModel(KING, BLACK);
+      case 'f8': return new PieceModel(BISHOP, BLACK, key);
+      case 'd1': return new PieceModel(QUEEN, WHITE, key);
+      case 'e1': return new PieceModel(KING, WHITE, key);
+      case 'd8': return new PieceModel(QUEEN, BLACK, key);
+      case 'e8': return new PieceModel(KING, BLACK, key);
     }
   }
 
@@ -286,6 +293,9 @@ export default class BoardModel {
     let moves = [];
     let handleKey = (currentKey, nextFunction) => {
       let currentPiece = this.map[currentKey];
+      if (currentPiece == null) {
+        console.log("currentPiece", currentKey, this.map);
+      }
       if (!currentPiece.isEmpty()) {
         if (currentPiece.color !== piece.color)  {
           moves.push(currentKey);
@@ -319,5 +329,88 @@ export default class BoardModel {
       this.getBottomLeft,
       this.getBottomRight
     ], 1);
+  }
+
+  movePiece(fromKey, toKey) {
+    let fromPiece = this.map[fromKey];
+    let toPiece = this.map[toKey];
+    if (!toPiece.isEmpty()) {
+      toPiece.position = '';
+    }
+    fromPiece.setPosition(toKey);
+    this.map[toKey] = this.map[fromKey];
+    this.map[fromKey] = PieceModel.EMPTY_PIECE;
+  }
+
+  findPiece(name, color) {
+    for (let key in this.map) {
+      let piece = this.map[key];
+      if (piece.name == name && piece.color == color) {
+        return piece;
+      }
+    }
+  }
+
+  findPieces(color) {
+    let pieces = [];
+    for (let key in this.map) {
+      let piece = this.map[key];
+      if (piece.color == color) {
+        pieces.push(piece)
+      }
+    };
+    return pieces;
+  }
+
+  getAllMoves(color) {
+    let pieces = this.findPieces(color);
+    let moves = {};
+    pieces.forEach(piece => {
+      let pieceMoves = this.getMoves(piece.position);
+      moves[piece.position] = pieceMoves;
+    })
+    return moves;
+  }
+
+  isInCheck(color, key) {
+    let isInCheck = false;
+    let kingPiece = key ? this.map[key] : this.findPiece(PieceModel.KING, color);
+    key = kingPiece.position;
+    let moves = this._getMovesFromDirectionFunctions(key, [
+      this.getTop,
+      this.getRight,
+      this.getBottom,
+      this.getLeft,
+      this.getTopLeft,
+      this.getTopRight,
+      this.getBottomLeft,
+      this.getBottomRight
+    ]);
+    for (let i in moves) {
+      let k = moves[i];
+      let piece = this.map[k];
+      if (piece.isEmpty()) continue;
+      let pieceMoves = this.getMoves(k);
+      for (let j in pieceMoves) {
+        let k2 = pieceMoves[j];
+        if (k2 !== key) continue;
+        isInCheck = true;
+        break;
+      }
+      if (isInCheck) break;
+    }
+    return isInCheck;
+  }
+
+  cloneMap() {
+    let jsonString = JSON.stringify(this.map);
+    return JSON.parse(jsonString);
+  }
+
+  setMap(map) {
+    for (let key in map) {
+      let { name, color, position } = map[key];
+      this.map[key] = new PieceModel(name, color, position);
+    }
   }
 }

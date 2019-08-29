@@ -6,7 +6,13 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { MainActions } from '../../data/redux/actions';
-import { BoardModel, AccountModel, PieceModel, PlayerModel } from '../../data/models';
+import {
+  BoardModel,
+  AccountModel,
+  GameModel,
+  PieceModel,
+  PlayerModel
+} from '../../data/models';
 import { Colors, Sizes, Languages } from '../../constants';
 import { BoardView } from '../views';
 import { TextButton } from '../buttons';
@@ -32,25 +38,22 @@ const mapDispatchToProps = (dispatch) => {
 @connect(mapStateToProps, mapDispatchToProps)
 export default class GameScreen extends React.Component {
   state = {
-    boardModel: new BoardModel(),
+    gameModel: null,
     isPlayer1: true,
-    loading: true,
-    history: []
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.loadOpponent();
   }
 
   loadOpponent() {
     setTimeout(() => {
       let oponent = new AccountModel();
-      this.setPlayers(oponent);
-      this.setState({loading: false});
+      this.startGame(oponent);
     }, 0)
   }
 
-  setPlayers(oponent) {
+  startGame(oponent) {
     let { account } = this.props.user;
     let random = Math.floor((Math.random() * 100) + 1);
     console.log("random", random)
@@ -63,53 +66,40 @@ export default class GameScreen extends React.Component {
       player1 = new PlayerModel(oponent, PieceModel.WHITE);
       player2 = new PlayerModel(account, PieceModel.BLACK);
     }
-    this.setState({player1, player2, isPlayer1});
+    let gameModel = new GameModel(player1, player2);
+    this.setState({gameModel, isPlayer1});
   }
 
   movePiece = (selectedKey, toKey) => {
-    let {
-      boardModel,
-      history,
-      player1,
-      player2
-    } = this.state;
-    history.push(boardModel.map);
-    let selectedPiece = boardModel.map[selectedKey];
-    boardModel.map[selectedKey] = new PieceModel(PieceModel.EMPTY);
-    let toPiece = boardModel.map[toKey];
-    if (!toPiece.isEmpty()) {
-      if (toPiece.color == player1.color) {
-        player1.score -= toPiece.getValue();
-      } else {
-        player2.score -= toPiece.getValue();
-      }
+    let { gameModel } = this.state;
+    gameModel.movePiece(selectedKey, toKey);
+    let isCheckMate = gameModel.isCheckMate();
+    if (isCheckMate) {
+      console.log("CHECKMATE!");
     }
-    boardModel.map[toKey] = selectedPiece;
-    this.setState({
-      boardModel,
-      history,
-      player1,
-      player2
-    })
+    this.setState({ gameModel, isCheckMate });
+  }
+
+  renderLoading() {
+    return <Text>Loading...</Text>;
   }
 
   render() {
     let { language } = this.props.main;
     let {
-      boardModel,
-      player1,
-      player2,
+      gameModel,
       isPlayer1,
-      loading
     } = this.state;
+    if (gameModel == null) return this.renderLoading();
     return (
       <View style={Styles.container}>
         <BoardView
-          boardModel={boardModel}
+          boardModel={gameModel.board}
           flipped={!isPlayer1}
-          loading={loading}
           movePiece={this.movePiece}
         />
+        <Text>Player1 score: {gameModel.player1.score}</Text>
+        <Text>Player2 score: {gameModel.player2.score}</Text>
       </View>
     );
   }

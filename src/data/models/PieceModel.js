@@ -10,9 +10,12 @@ export default class PieceModel {
   static WHITE = 1;
   static BLACK = 0;
 
-  constructor(name = PieceModel.EMPTY, color = '') {
+  static EMPTY_PIECE = new PieceModel(PieceModel.EMPTY);
+
+  constructor(name = PieceModel.EMPTY, color = '', position = '') {
     this.name = name;
     this.color = color;
+    this.position = position;
     this.value = this.getValue();
   }
 
@@ -26,6 +29,10 @@ export default class PieceModel {
       case PieceModel.QUEEN: return 9;
       case PieceModel.KING: return 4;
     }
+  }
+
+  setPosition(position) {
+    this.position = position;
   }
 
   isEmpty() {
