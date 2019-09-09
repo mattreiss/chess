@@ -17,6 +17,7 @@ export default class PieceModel {
     this.color = color;
     this.position = position;
     this.value = this.getValue();
+    this.hasMoved = false;
   }
 
   getValue() {
@@ -33,6 +34,7 @@ export default class PieceModel {
 
   setPosition(position) {
     this.position = position;
+    this.hasMoved = true;
   }
 
   isEmpty() {

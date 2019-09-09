@@ -71,12 +71,23 @@ export default class GameScreen extends React.Component {
   }
 
   movePiece = (selectedKey, toKey) => {
+    let { gameModel, isCheckMate } = this.state;
+    if (isCheckMate) return;
+    let isMoved = gameModel.movePiece(selectedKey, toKey);
+    isCheckMate = isMoved && gameModel.isCheckMate();
+    this.setState({ gameModel, isCheckMate });
+  }
+
+  undoMove = () => {
     let { gameModel } = this.state;
-    gameModel.movePiece(selectedKey, toKey);
+    gameModel.undoMove();
+    this.setState({ gameModel, isCheckMate: false });
+  }
+
+  redoMove = () => {
+    let { gameModel } = this.state;
+    gameModel.redoMove();
     let isCheckMate = gameModel.isCheckMate();
-    if (isCheckMate) {
-      console.log("CHECKMATE!");
-    }
     this.setState({ gameModel, isCheckMate });
   }
 
@@ -89,10 +100,15 @@ export default class GameScreen extends React.Component {
     let {
       gameModel,
       isPlayer1,
+      isCheckMate
     } = this.state;
     if (gameModel == null) return this.renderLoading();
+    let isPlayer1Turn = gameModel.turn === gameModel.player1.color;
     return (
       <View style={Styles.container}>
+        {isCheckMate && (
+          <Text>Check Mate!</Text>
+        )}
         <BoardView
           boardModel={gameModel.board}
           flipped={!isPlayer1}
@@ -100,6 +116,15 @@ export default class GameScreen extends React.Component {
         />
         <Text>Player1 score: {gameModel.player1.score}</Text>
         <Text>Player2 score: {gameModel.player2.score}</Text>
+        <Text>Turn: {isPlayer1Turn ? "Player 1" : "Player2"}</Text>
+        <TextButton
+          onPress={this.undoMove}
+          text="Undo"
+        />
+        <TextButton
+          onPress={this.redoMove}
+          text="Redo"
+        />
       </View>
     );
   }

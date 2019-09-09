@@ -17,6 +17,7 @@ export default class BoardModel {
     this.forEach(({row, col}) => {
       let key = this.genKey({row, col});
       let val = this.getInitialPiece(key);
+      val.position = key;
       this.map[key] = val;
     })
   }
@@ -144,6 +145,7 @@ export default class BoardModel {
   }
 
   getMoves(key) {
+    console.log("getMoves", key);
     let piece = this.map[key];
     switch (piece.name) {
       case PieceModel.EMPTY: return [];
@@ -253,7 +255,7 @@ export default class BoardModel {
         }
       }
     })
-    console.log("knight moves for key", key, moves);
+    // console.log("knight moves for key", key, moves);
     return moves;
   }
 
@@ -314,7 +316,7 @@ export default class BoardModel {
         if (limit && i >= limit) break;
       }
     })
-    console.log("_getMovesFromDirectionFunctions moves for key", key, moves);
+    // console.log("_getMovesFromDirectionFunctions moves for key", key, moves);
     return moves;
   }
 
@@ -340,6 +342,7 @@ export default class BoardModel {
     fromPiece.setPosition(toKey);
     this.map[toKey] = this.map[fromKey];
     this.map[fromKey] = PieceModel.EMPTY_PIECE;
+    this.map[fromKey].position = fromKey;
   }
 
   findPiece(name, color) {
@@ -355,7 +358,7 @@ export default class BoardModel {
     let pieces = [];
     for (let key in this.map) {
       let piece = this.map[key];
-      if (piece.color == color) {
+      if (piece.color === color) {
         pieces.push(piece)
       }
     };
@@ -375,7 +378,7 @@ export default class BoardModel {
   isInCheck(color, key) {
     let isInCheck = false;
     let kingPiece = key ? this.map[key] : this.findPiece(PieceModel.KING, color);
-    key = kingPiece.position;
+    if (!key && kingPiece) key = kingPiece.position;
     let moves = this._getMovesFromDirectionFunctions(key, [
       this.getTop,
       this.getRight,
@@ -386,10 +389,14 @@ export default class BoardModel {
       this.getBottomLeft,
       this.getBottomRight
     ]);
+    let knightMoves = this.getKnightMoves(key);
+    console.log("knightMoves", knightMoves);
+    moves.concat(knightMoves);
     for (let i in moves) {
       let k = moves[i];
       let piece = this.map[k];
       if (piece.isEmpty()) continue;
+      if (piece.name == PieceModel.KNIGHT) console.log("knight check!");
       let pieceMoves = this.getMoves(k);
       for (let j in pieceMoves) {
         let k2 = pieceMoves[j];

@@ -14,6 +14,7 @@ export default class GameModel {
     this.mode = mode;
     this.history = [];
     this.future = [];
+    this.computeLegalMoves();
   }
 
   toggleTurn() {
@@ -24,14 +25,7 @@ export default class GameModel {
     let fromPiece = this.board.map[fromKey];
     if (fromPiece.color !== this.turn) return;
     let toPiece = this.board.map[toKey];
-    if (!toPiece.isEmpty()) {
-      if (toPiece.color == this.player1.color) {
-        this.player1.score -= toPiece.getValue();
-      } else {
-        this.player2.score -= toPiece.getValue();
-      }
-    }
-    this.history.push(this.board.cloneMap());
+    this._pushHistory();
     this.board.movePiece(fromKey, toKey);
     if (this.board.isInCheck(this.turn)) {
       console.log("moved into check");
@@ -41,47 +35,119 @@ export default class GameModel {
       this.future = [];
     }
     this.toggleTurn();
-    if (this.board.isInCheck(this.turn)) {
+    this.isInCheck = this.board.isInCheck(this.turn);
+    if (this.isInCheck) {
       console.log("checked opponent");
     }
-    return true;
-  }
-
-
-  isCheckMate() {
-    let colors = [PieceModel.WHITE, PieceModel.BLACK];
-    for (let i in colors) {
-      let color = colors[i];
-      if (this.turn == color) continue;
-      if (!this.board.isInCheck(color)) continue;
-      let allMoves = this.board.getAllMoves(color);
-      console.log("allMoves", allMoves, color);
-      for (let key in allMoves) {
-        let moves = allMoves[key];
-        for (let j in moves) {
-          let toKey = moves[j];
-          console.log("movePiece", key, toKey);
-          if (this.movePiece(key,toKey)) {
-            this.undoMove();
-            return false;
-          }
-        }
+    if (!toPiece.isEmpty()) {
+      if (toPiece.color == this.player1.color) {
+        this.player1.score -= toPiece.getValue();
+      } else {
+        this.player2.score -= toPiece.getValue();
       }
     }
     return true;
   }
 
+
   undoMove() {
-    console.log("this.history", this.history);
+    if (this.history.length < 1) return;
+    this._pushFuture();
+    this._popHistory();
     this.toggleTurn();
-    this.future.push(this.board.cloneMap());
-    this.board.setMap(this.history.pop());
   }
 
   redoMove() {
     if (this.future.length < 1) return;
-    this.history.push(this.board.cloneMap());
-    this.board.setMap(this.future.pop());
+    this._pushHistory();
+    this._popFuture();
+    this.toggleTurn();
   }
 
+  toJSON() {
+    let jsonString = JSON.stringify({
+      map: this.board.cloneMap(),
+      player1: this.player1.toJSON(),
+      player2: this.player2.toJSON(),
+      legalMoves: this.legalMoves
+    });
+    return JSON.parse(jsonString);
+  }
+
+  fromJSON(json) {
+    let {
+      map,
+      player1,
+      player2,
+      legalMoves
+    } = json;
+    this.board.setMap(map);
+    this.player1.fromJSON(player1);
+    this.player2.fromJSON(player2);
+    this.legalMoves = legalMoves;
+  }
+
+  _pushHistory() {
+    this.history.push(this.toJSON());
+  }
+
+  _popHistory() {
+    let json = this.history.pop();
+    this.fromJSON(json);
+  }
+
+  _pushFuture() {
+    this.future.push(this.toJSON())
+  }
+
+  _popFuture() {
+    let { map } = this.future.pop();
+    this.board.setMap(map);
+  }
+
+  _addLegalMove(fromKey, toKey) {
+    this.legalMoves.push({fromKey, toKey})
+  }
+
+  computeLegalMoves() {
+    this.legalMoves = [];
+    let allMoves = this.board.getAllMoves(this.turn);
+    for (let key in allMoves) {
+      let moves = allMoves[key];
+      for (let j in moves) {
+        let toKey = moves[j];
+        if (this.movePiece(key,toKey)) {
+          this._addLegalMove(key, toKey)
+          this.undoMove();
+        }
+      }
+    }
+  }
+
+  isCheckMate() {
+    console.log("legalMoves", this.legalMoves);
+    let hasCheck = false;
+    let colors = [PieceModel.WHITE, PieceModel.BLACK];
+    for (let i in colors) {
+      let color = colors[i];
+      if (!this.board.isInCheck(color)) {
+        continue;
+      }
+      console.log("isInCheck", color);
+      let allMoves = this.board.getAllMoves(color);
+      hasCheck = true;
+      for (let key in allMoves) {
+        let moves = allMoves[key];
+        for (let j in moves) {
+          let toKey = moves[j];
+          if (this.movePiece(key,toKey)) {
+            this.undoMove();
+            hasCheck = false;
+          }
+        }
+      }
+    }
+    !hasCheck && this.computeLegalMoves();
+    return hasCheck;
+  }
 }
